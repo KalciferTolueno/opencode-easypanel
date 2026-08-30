@@ -38,6 +38,7 @@ Official references: [OpenCode Web](https://opencode.ai/docs/web/),
 opencode/
 ├── Dockerfile
 ├── docker-compose.yml
+├── docker-entrypoint.sh
 ├── .dockerignore
 ├── .env.example
 ├── .gitignore
@@ -60,9 +61,12 @@ environment editor instead.
 | `workspace` | `/workspace` | All projects: `/workspace/proyecto-1`, `/workspace/proyecto-2`, … |
 
 The OpenCode process runs as the non-root `opencode` user and has read/write
-access to all paths above. In EasyPanel, make each entry a **Volume** mount with
-the corresponding container path. Do not replace these with an ephemeral
-container path.
+access to all paths above. At startup, the entrypoint repairs a volume created
+as `root` only when its root directory has the wrong owner, then immediately
+drops privileges before starting OpenCode. This prevents the EasyPanel volume
+ownership error without running OpenCode itself as `root`. In EasyPanel, make
+each entry a **Volume** mount with the corresponding container path. Do not
+replace these with an ephemeral container path.
 
 ## Recommended EasyPanel deployment: App service
 

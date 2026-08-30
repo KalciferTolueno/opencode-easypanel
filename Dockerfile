@@ -16,6 +16,7 @@ RUN apt-get update \
         ca-certificates \
         curl \
         git \
+        gosu \
         openssh-client \
         python3 \
         python3-pip \
@@ -31,7 +32,10 @@ RUN apt-get update \
         /home/opencode/.ssh \
     && rm -rf /var/lib/apt/lists/*
 
-USER opencode
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+RUN chmod 0755 /usr/local/bin/docker-entrypoint
+
+USER root
 WORKDIR /workspace
 
 EXPOSE 4096
@@ -41,4 +45,5 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
     --user "$OPENCODE_SERVER_USERNAME:$OPENCODE_SERVER_PASSWORD" \
     http://127.0.0.1:4096/global/health > /dev/null || exit 1
 
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint"]
 CMD ["opencode", "web", "--hostname", "0.0.0.0", "--port", "4096"]
