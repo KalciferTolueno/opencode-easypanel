@@ -1,0 +1,20 @@
+# Runtime secrets and local Compose overrides
+.env
+.env.*
+!.env.example
+compose.override.yml
+docker-compose.override.yml
+
+# Local OpenCode state, if bind-mounted for development
+.opencode-data/
+.opencode-config/
+.opencode-state/
+.opencode-cache/
+.opencode-ssh/
+workspace/
+
+# Editor and operating-system files
+.DS_Store
+.vscode/
+.idea/
+*.swp

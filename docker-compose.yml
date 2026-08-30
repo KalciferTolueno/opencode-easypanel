@@ -1,0 +1,36 @@
+services:
+  opencode:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      OPENCODE_SERVER_USERNAME: ${OPENCODE_SERVER_USERNAME:?Set OPENCODE_SERVER_USERNAME in EasyPanel or .env}
+      OPENCODE_SERVER_PASSWORD: ${OPENCODE_SERVER_PASSWORD:?Set OPENCODE_SERVER_PASSWORD in EasyPanel or .env}
+    expose:
+      - "4096"
+    volumes:
+      - opencode_config:/home/opencode/.config/opencode
+      - opencode_data:/home/opencode/.local/share/opencode
+      - opencode_state:/home/opencode/.local/state/opencode
+      - opencode_cache:/home/opencode/.cache/opencode
+      - opencode_ssh:/home/opencode/.ssh
+      - workspace:/workspace
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl --fail --silent --show-error --user \"$$OPENCODE_SERVER_USERNAME:$$OPENCODE_SERVER_PASSWORD\" http://127.0.0.1:4096/global/health > /dev/null || exit 1",
+        ]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+
+volumes:
+  opencode_config:
+  opencode_data:
+  opencode_state:
+  opencode_cache:
+  opencode_ssh:
+  workspace:

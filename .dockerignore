@@ -1,0 +1,15 @@
+.env
+.env.*
+!.env.example
+.git
+.gitignore
+Dockerfile*
+docker-compose*.yml
+README.md
+node_modules
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+__pycache__
+*.py[cod]
+.DS_Store
